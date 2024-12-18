@@ -1,0 +1,72 @@
+[gd_scene load_steps=7 format=3 uid="uid://dn8fivp15al07"]
+
+[ext_resource type="Script" path="res://coin.gd" id="1_jo807"]
+[ext_resource type="Texture2D" uid="uid://2gdndxwa8usn" path="res://Assets/coin1_16x16.png" id="2_a8egq"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qoqdk"]
+radius = 27.0
+height = 64.0
+
+[sub_resource type="Animation" id="Animation_vef4o"]
+resource_name = "Coin spin"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333, 0.166667, 0.2, 0.233333, 0.266667, 0.3, 0.333333, 0.366667, 0.4, 0.433333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+}
+
+[sub_resource type="Animation" id="Animation_la11v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ygiof"]
+_data = {
+"Coin spin": SubResource("Animation_vef4o"),
+"RESET": SubResource("Animation_la11v")
+}
+
+[node name="Coin" type="Node2D"]
+script = ExtResource("1_jo807")
+
+[node name="Body" type="StaticBody2D" parent="."]
+
+[node name="Collection_area" type="Area2D" parent="Body"]
+position = Vector2(534, 271)
+
+[node name="Collider" type="CollisionShape2D" parent="Body/Collection_area"]
+position = Vector2(4, -1)
+shape = SubResource("CapsuleShape2D_qoqdk")
+
+[node name="sprite" type="Sprite2D" parent="Body"]
+position = Vector2(536, 270)
+scale = Vector2(4.04, 4.04)
+texture = ExtResource("2_a8egq")
+hframes = 15
+
+[node name="animation" type="AnimationPlayer" parent="Body"]
+libraries = {
+"": SubResource("AnimationLibrary_ygiof")
+}
+autoplay = "Coin spin"
+
+[connection signal="body_entered" from="Body/Collection_area" to="." method="_on_collection_area_body_entered"]
